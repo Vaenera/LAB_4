@@ -1,46 +1,44 @@
+package Model.Vehicle;
 import java.awt.*;
-public class Scania extends Cars {
-    private Ramp ramp;
-    protected Scania(int x, int y) {
-        direction = Directions.NORTH;
+
+public class Scania extends Trucks implements ITruckBed {
+    /**
+     * Truck attributes.
+     */
+    public Scania(double x, double y){
+        super (x, y, 0, 70, 1);
         nrDoors = 2;
-        color = Color.blue;
-        enginePower = 400;
+        color = Color.white;
+        enginePower = 450;
         modelName = "Scania";
-        this.ramp = new Ramp();
         stopEngine();
     }
 
+    /**
+     * Return the factor that effects the speed of the Truck.
+     */
+    @Override
+    public double speedFactor() {
+        return enginePower * 0.01;
+    }
 
-    @Override
-    protected double speedFactor() {
-        return 1;
+    /**
+     * method to get truck bed angle.
+     * @return the truck bed angle.
+     */
+    public double getTruckBedAngle(){ return truckBed.getTruckBedAngle();}
+
+    /**
+     * method to take the truck bed up one degree at the time.
+     */
+    public void truckBedUp(){
+        truckBed.truckBedUp();
     }
-    public double getTruckBedAngle() {
-        return this.ramp.getAngle();
-    }
-    public void raiseAngle(double amount) {
-        boolean b = this.getCurrentSpeed() == 0;
-        if (b) {
-            this.ramp.raise(amount);
-            if (this.ramp.getAngle() > 0){
-                this.enginePower = 0;
-                }
-            }
-        }
-    public void lowerAngle(double amount) {
-        boolean b = this.getCurrentSpeed() == 0;
-        if (b) {
-            this.ramp.lower(amount);
-            if (this.ramp.getAngle() == 0) {
-                this.enginePower = 400;
-            }
-        }
-    }
-    @Override
-    public void startEngine() {
-        if (this.enginePower != 0) {
-            this.currentSpeed = 0.1;
-        }
+
+    /**
+     * method to take the truck bed down one degree at the time.
+     */
+    public void truckBedDown(){
+        truckBed.truckBedDown();
     }
 }

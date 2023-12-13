@@ -1,30 +1,58 @@
+package Model.Vehicle;
+
+import Model.Vehicle.Cars;
+
 import java.awt.*;
 
-public class Saab extends Cars{
-    protected boolean turboOn;
-    protected Saab(int x, int y){
-        direction = Directions.NORTH;
+/**
+ * Overall logic for the car model: Saab
+ */
+public class Saab extends Cars implements ITurbo {
+
+    /**
+     * A boolean that checks if turbo i on.
+     */
+    public boolean turboOn;
+
+    /**
+     * Car attributes.
+     */
+
+    public Saab(double x, double y){
+        super(x, y);
         nrDoors = 2;
         color = Color.red;
         enginePower = 125;
         turboOn = false;
         modelName = "Saab95";
         stopEngine();
+        LengthVehicle = 5.0;
     }
-    protected void setTurboOn(){
+
+    /**
+     * @return true if turbo is on
+     */
+
+    public void setTurboOn(){
         turboOn = true;
     }
-    protected void setTurboOff(){ turboOn = false; }
 
-    public boolean getTurbo(){
-        return turboOn;
-
+    /**
+     * @return false if turbo is off
+     */
+    public void setTurboOff(){
+        turboOn = false;
     }
 
-    @Override
-    protected double speedFactor(){
+    /**
+     *
+     * @return the factor that effects the speed of the car
+     * depends on  the enginePower and turbo
+     */
+    public double speedFactor(){
         double turbo = 1;
         if(turboOn) turbo = 1.3;
         return enginePower * 0.01 * turbo;
     }
+
 }

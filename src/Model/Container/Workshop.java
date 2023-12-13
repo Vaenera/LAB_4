@@ -1,4 +1,4 @@
-package Container.Workshop;
+package Model.Container;
 import Model.Vehicle.Vehicle;
 
 public class Workshop <T extends Vehicle>{

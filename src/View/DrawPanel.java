@@ -1,12 +1,18 @@
+package View;
+
+import Model.Vehicle.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import java.util.List;
 import java.util.Objects;
 
 public class DrawPanel extends JPanel {
+    List<Vehicle> vehicleList = new ArrayList();
 
     // Just a single image, TODO: Generalize !!!!!!!!!!!
     BufferedImage volvoImage;
@@ -19,24 +25,6 @@ public class DrawPanel extends JPanel {
     Point saabPoint = new Point();
     Point scaniaPoint = new Point();
 
-    private ArrayList<Point> carPoints = new ArrayList<>();
-    private ArrayList<BufferedImage> carImages = new ArrayList<>();
-
-    Point carPoint = new Point();
-
-    void moveit(Cars car, int x, int y) {
-        if (car instanceof Saab) {
-            saabPoint.x = x;
-            saabPoint.y = y;
-        } else if (car instanceof Volvo) {
-            volvoPoint.x = x;
-            volvoPoint.y = y;
-        } else if (car instanceof Scania) {
-            scaniaPoint.x = x;
-            scaniaPoint.y = y;
-        }
-
-    }
 
     public DrawPanel(int x, int y) {
         this.setDoubleBuffered(true);
@@ -52,30 +40,27 @@ public class DrawPanel extends JPanel {
             // if you are starting in IntelliJ.
 
             volvoImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("pics/Volvo240.jpg")));
-            carPoints.add(volvoPoint);
             saabImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("pics/Saab95.jpg")));
-            carPoints.add(saabPoint);
             scaniaImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("pics/Scania.jpg")));
-            carPoints.add(scaniaPoint);
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-
+    public void updateList(List<Vehicle> vehicles){
+        vehicleList =  vehicles;
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (int i = 0; i < carPoints.size(); i++) {
-            Point carPoint = carPoints.get(i);
-
-            if (i == 0) {
-                g.drawImage(volvoImage, carPoint.x, carPoint.y, null);
-            } else if (i == 1) {
-                g.drawImage(saabImage, carPoint.x, carPoint.y + 100, null);
-            } else if (i == 2) {
-                g.drawImage(scaniaImage, carPoint.x, carPoint.y + 200, null);
+        for(Vehicle vehicle : vehicleList) {
+            if (vehicle instanceof Volvo) {
+                g.drawImage(volvoImage, (int) vehicle.getX(), (int) vehicle.getY(), null);//
+            } else if (vehicle instanceof Saab) {
+                g.drawImage(saabImage, (int) vehicle.getX(), (int) vehicle.getY(), null);//
+            } else if (vehicle instanceof Scania) {
+                g.drawImage(scaniaImage, (int) vehicle.getX(), (int) vehicle.getY(), null);//
             }
         }
     }

@@ -1,3 +1,5 @@
+import Model.Vehicle.Cars;
+import Model.Vehicle.Volvo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,7 +11,7 @@ public class CarsTest {
     private Volvo volvo;
     @Before
     public void init() {
-        volvo = new Volvo();
+        volvo = new Volvo(0,0);
     }
     @Test
     public void testGetNrDoors() {
@@ -86,12 +88,12 @@ public class CarsTest {
     @Test
     public void testTurnLeft() {
         volvo.turnLeft();
-        assertSame(Cars.Directions.WEST, volvo.getDirection());
+        assertSame(Directions.WEST, volvo.getDirection());
     }
     @Test
     public void testTurnRight() {
         volvo.turnRight();
-        assertEquals(Cars.Directions.EAST, volvo.getDirection());
+        assertEquals(Directions.EAST, volvo.getDirection());
     }
     @Test
     public void testGas() {

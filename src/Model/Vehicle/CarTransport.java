@@ -1,66 +1,88 @@
+package Model.Vehicle;
+import Model.Container.Container;
 import java.awt.*;
 import java.util.ArrayList;
 import java.lang.Math;
 
-public class CarTransport extends Cars {
-    private final Ramp ramp;
-    protected ArrayList<Cars> carList;
+public class CarTransport extends Trucks implements ITruckBed {
+    public Container<Cars> container; //typ argument
+    public boolean rampOut;
 
-    protected CarTransport() {
-        direction = Directions.NORTH;
+    /**
+     * Truck attributes.
+     */
+    public CarTransport(double x, double y) {
+        super (x, y, 0,70, 70);
         nrDoors = 2;
-        color = Color.green;
-        enginePower = 300;
-        modelName = "TransportCar";
-        this.ramp = new Ramp();
-        carList = new ArrayList<>(10);
+        color = Color.gray;
+        enginePower = 450;
+        modelName = "carTransport";
         stopEngine();
+        LengthVehicle = 21.0;
+        this.container = new Container(8);
     }
-    public boolean getRamp() {
-        return this.ramp.isRaised();
+
+    /**
+     * Return the factor that effects the speed of the Truck.
+     */
+    @Override
+    public double speedFactor() {
+        return enginePower * 0.01;
     }
-    public void lowerRamp() {
-        if (this.currentSpeed == 0) {
-            this.enginePower = 0;
-            this.ramp.rampDown();
+
+    public void truckBedUp() {
+        truckBed.truckBedUp();
+        rampOut= true;
+    }
+
+    public void truckBedDown() {
+        truckBed.truckBedDown();
+        rampOut= false;
+
+    }
+
+    public void loadCar(Cars car){
+        if (rampOut && checkDistanceBetweenVehicles(car) == true && currentSpeed == 0.0){
+            container.loadN(car);
         }
     }
-    public void raiseRamp() {
-        if (this.currentSpeed == 0) {
-            this.enginePower = 300;
-            this.ramp.rampUp();
+
+    public void unloadCar(Cars car){
+        if (rampOut && currentSpeed == 0.0){
+            container.unloadN(car);
+            checkDistanceBetweenVehicles(car);
         }
     }
     @Override
-    public void startEngine() {
-        if (this.getRamp()) {
-            this.currentSpeed = 0.1;
-        }
-    }
-    public boolean checkProximity(Cars car) {
-        return Math.abs(car.getX() - this.getX()) <= 5 && Math.abs(car.getY() - this.getY()) <= 5;
-    }
-    public void load(Cars car) {
-        if (!(car instanceof CarTransport) && !this.getRamp() && this.checkProximity(car)) {
-            carList.add(car);
-        }
-    }
-    public void unload(Cars car) {
-        if (this.carList != null && !this.carList.isEmpty()) {
-            this.carList.remove(carList.size()-1);
-            car.y_coordinate = this.y_coordinate - 5;
-        }
-    }
-    public ArrayList<Cars> getLoadedCars() {
-        return new ArrayList<>(carList);
-    }
-    @Override
-    public void move() {
+    public void move(){
         super.move();
-        for (Cars car : carList) {
-            car.x_coordinate = this.x_coordinate;
-            car.y_coordinate = this.y_coordinate;
+        updatePositionOfCarInContainer();
+
+    }
+
+    public void updatePositionOfCarInContainer(){
+        if(container.size() > 0) {
+            for (Cars car : container.container) {
+                car.setX(this.x);
+                car.setY(this.y);
+            }
         }
+    }
+
+    public boolean checkDistanceBetweenVehicles(Vehicle vehicle) {
+        double xDistance = this.x - vehicle.getX();
+        double yDistance = this.y - vehicle.getY();
+        if (xDistance >= 0 && xDistance <= 1 && yDistance >= 0 && yDistance <= 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean containerIsEmpty() {
+        container.contains();
+        return container.contains();
     }
 
 }

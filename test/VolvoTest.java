@@ -1,3 +1,4 @@
+import Model.Vehicle.Volvo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ public class VolvoTest {
 
     @Before
     public void init() {
-        volvo = new Volvo();
+        volvo = new Volvo(0,0);
     }
 
 

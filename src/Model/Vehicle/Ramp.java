@@ -1,3 +1,5 @@
+package Model.Vehicle;
+
 public class Ramp {
     private boolean raised;
     private double angle;

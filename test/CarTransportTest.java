@@ -1,3 +1,6 @@
+import Model.Vehicle.CarTransport;
+import Model.Vehicle.Ramp;
+import Model.Vehicle.Volvo;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

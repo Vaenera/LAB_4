@@ -1,127 +1,176 @@
+package Controller;
+import Model.Model;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class CarController {
-    private final int delay = 50;
-    private boolean engineStatus = false;
-    private Timer timer = new Timer(delay, new TimerListener());
+    private static final int X = 800;
 
-    CarView frame;
-    ArrayList<Cars> cars = new ArrayList<>();
+    Model model;
 
-    ArrayList<Saab> saab95s = new ArrayList<>();
-    ArrayList<Scania> scanias = new ArrayList<>();
-
-    public static void main(String[] args) {
-        CarController cc = new CarController();
-
-        Saab saab95 = new Saab(0, 160);
-        Scania scania = new Scania(0, 320);
-        Volvo volvo240 = new Volvo(0, 0);
-
-        cc.cars.add(volvo240);
-        cc.cars.add(saab95);
-        cc.cars.add(scania);
-
-        cc.saab95s.add(saab95);
-        cc.scanias.add(scania);
-
-        cc.frame = new CarView("CarSim 1.0", cc);
-
-        cc.timer.start();
+    public CarController(Model model) {
+        this.model = model;
     }
 
-    private class TimerListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            for (Cars car : cars) {
-                collisionWithWalls(car);
-                car.move();
-                int x = (int) Math.round(car.getX());
-                int y = (int) Math.round(car.getY());
-                frame.drawPanel.moveit(car, x, y);
-                frame.drawPanel.repaint();
-            }
-        }
-    }
-
-    private void collisionWithWalls(Cars car) {
-        if (car.getX() > 700) {
-            car.x_coordinate = 700;
-            car.turnLeft();
-            car.turnLeft();
-        }
-        if (car.getY() > 560) {
-            car.y_coordinate = 560;
-            car.turnLeft();
-            car.turnLeft();
-        }
-        if (car.getX() < 0) {
-            car.x_coordinate = 0;
-            car.turnLeft();
-            car.turnLeft();
-        }
-        if (car.getY() < 0) {
-            car.y_coordinate = 0;
-            car.turnLeft();
-            car.turnLeft();
-        }
-    }
-
-    // Calls the gas method for each car once
     void gas(int amount) {
-        double gas = ((double) amount) / 100;
-        for (Cars car : cars
-        ) {
-            if (engineStatus){
-            car.gas(gas);}
-        }
-    }
-    void brake(int amount){
-        double brake = ((double) amount) / 100;
-        for (Cars car : cars
-        ) {
-            car.brake(brake);
-        }
-    }
-    void startAllCars () {
-        for (Cars car : cars) {
-            car.startEngine();
-            engineStatus = true;
-        }
+        model.gas(amount);
     }
 
-    void  stopAllCars() {
-        for (Cars car : cars) {
-            car.stopEngine();
-            engineStatus = false;
-        }
+    void brake(int amount) {
+        model.brake(amount);
     }
 
-    void setTurboOn () {
-        for (Saab saab95: saab95s) {
-            saab95.turboOn = true;
-        }
+    void scaniaLiftBed() {
+        model.scaniaLiftBed();
     }
 
-    void setTurboOff () {
-        for (Saab saab95: saab95s) {
-            saab95.turboOn = false;
-        }
+    void scaniaLowerBed() {
+        model.scaniaLowerBed();
     }
 
-    void raiseAngle(){
-        for(Scania scania: scanias){
-            scania.raiseAngle(45);
-        }
+    void setTurboOn() {
+        model.saabTurboOn();
     }
 
+    void setTurboOff() {
+        model.saabTurboOff();
+    }
 
-    void lowerAngle() {
-        for(Scania scania: scanias) {
-            scania.lowerAngle(45);
+    void startAllCars() {
+        model.startAllCars();
+    }
+
+    void stopAllCars() {
+        model.stopAllCars();
+    }
+
+    void AddCar(){model.addCarWithPosition();}
+    void RemoveCar(){model.remove();}
+
+
+    public JPanel gasPanel = new JPanel();
+    public JPanel controlPanel = new JPanel();
+    JSpinner gasSpinner = new JSpinner();
+    int gasAmount = 0;
+    JLabel gasLabel = new JLabel("Amount of Gas/Brake");
+
+    JButton gasButton = new JButton("Gas");
+    JButton brakeButton = new JButton("Brake");
+    JButton turboOnButton = new JButton("Saab Turbo on");
+    JButton turboOffButton = new JButton("Saab Turbo off");
+    JButton liftBedButton = new JButton("Scania Lift Bed");
+    JButton lowerBedButton = new JButton("Lower Lift Bed");
+
+    JButton startButton = new JButton("Start all cars");
+    JButton stopButton = new JButton("Stop all cars");
+
+    JButton addcarbutton = new JButton("Add Car");
+    JButton removebutton = new JButton("Remove car");
+
+
+    public void actionListeners() {
+        gasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gas(gasAmount);
             }
-        }
+        });
+        brakeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                brake(gasAmount);
+            }
+        });
+        turboOnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.saabTurboOn();
+            }
+        });
+        turboOffButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.saabTurboOff();
+            }
+        });
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.startAllCars();
+            }
+        });
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.stopAllCars();
+            }
+        });
+        liftBedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.scaniaLiftBed();
+            }
+        });
+        lowerBedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.scaniaLowerBed();
+            }
+        });
+        addcarbutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.addCarWithPosition();
+            }
+        });
+        removebutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.remove();
+            }
+        });
     }
 
+
+    public void buttons() {
+        SpinnerModel spinnerModel = new SpinnerNumberModel(0, //initial value
+                0, //min
+                100, //max
+                1);//step
+        gasSpinner = new JSpinner(spinnerModel);
+        gasSpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                gasAmount = (int) ((JSpinner)e.getSource()).getValue();
+            }
+        });
+
+        gasPanel.setLayout(new BorderLayout());
+        gasPanel.add(gasLabel, BorderLayout.PAGE_START);
+        gasPanel.add(gasSpinner, BorderLayout.PAGE_END);
+
+
+        controlPanel.setLayout(new GridLayout(2, 5));
+        controlPanel.add(gasButton, 0);
+        controlPanel.add(turboOnButton, 1);
+        controlPanel.add(liftBedButton, 2);
+        controlPanel.add(addcarbutton,3);
+        controlPanel.add(startButton,4);
+
+        controlPanel.add(brakeButton, 5);
+        controlPanel.add(turboOffButton, 6);
+        controlPanel.add(lowerBedButton, 7);
+        controlPanel.add(removebutton, 8);
+        controlPanel.add(stopButton,9);
+
+
+
+        controlPanel.setPreferredSize(new Dimension((X / 2) + 4, 200));
+        controlPanel.setBackground(Color.CYAN);
+
+    }
+}

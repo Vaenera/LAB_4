@@ -1,3 +1,7 @@
+import Model.Container.Workshop;
+import Model.Vehicle.Cars;
+import Model.Vehicle.Saab;
+import Model.Vehicle.Volvo;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

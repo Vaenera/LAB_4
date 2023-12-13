@@ -1,2 +1,8 @@
-package Model.Vehicle;public interface ITurbo {
+package Model.Vehicle;
+
+public interface ITurbo {
+
+    void setTurboOn();
+
+    void setTurboOff();
 }
